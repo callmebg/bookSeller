@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:padding="5dp"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button android:layout_height="wrap_content" android:layout_width="match_parent" android:text="第一个显示信息" android:id="@+id/btn_one"/>
+
+    <Button android:layout_height="wrap_content" android:layout_width="match_parent" android:text="第二个显示信息" android:id="@+id/btn_two"/>
+
+    <Button android:layout_height="wrap_content" android:layout_width="match_parent" android:text="第三个显示信息" android:id="@+id/btn_three"/>
+
+    <Button android:layout_height="wrap_content" android:layout_width="match_parent" android:text="第四个显示信息" android:id="@+id/btn_four"/>
+</LinearLayout>
