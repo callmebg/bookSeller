@@ -3,9 +3,7 @@ package com.example.bookseller;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,12 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout ly_tab_menu_better;
     private TextView tab_menu_better;
     private TextView tab_menu_better_num;
-    private LinearLayout ly_tab_menu_setting;
-    private TextView tab_menu_setting;
-    private ImageView tab_menu_setting_partner;
-    private FragmentManager fManager;
-    private FragmentTransaction fTransaction;
-    private MyFragment fg1;
+    private TextView text_topbar;
+    private LinearLayout sample_product;
 
 
     @Override
@@ -39,17 +33,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         bindViews();
         ly_tab_menu_channel.performClick();
-        fg1 = new MyFragment();
-        fManager = getFragmentManager();
-        fTransaction = fManager.beginTransaction();
-        fTransaction.add(R.id.ly_content, (Fragment) fg1, null);
+        //隐藏默认标题栏
         ActionBar actionbar = getSupportActionBar();
         if(actionbar != null){
             actionbar.hide();
         }
 
     }
-
+    //声明所有控件
     private void bindViews() {
         ly_tab_menu_channel = (LinearLayout) findViewById(R.id.ly_tab_menu_channel);
         tab_menu_channel = (TextView) findViewById(R.id.tab_menu_channel);
@@ -60,17 +51,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ly_tab_menu_better = (LinearLayout) findViewById(R.id.ly_tab_menu_better);
         tab_menu_better = (TextView) findViewById(R.id.tab_menu_better);
         tab_menu_better_num = (TextView) findViewById(R.id.tab_menu_better_num);
-        ly_tab_menu_setting = (LinearLayout) findViewById(R.id.ly_tab_menu_setting);
-        tab_menu_setting = (TextView) findViewById(R.id.tab_menu_setting);
-        tab_menu_setting_partner = (ImageView) findViewById(R.id.tab_menu_setting_partner);
+        text_topbar = (TextView) findViewById(R.id.txt_topbar);
+        sample_product = (LinearLayout) findViewById(R.id.sample_product);
 
         ly_tab_menu_channel.setOnClickListener(this);
         ly_tab_menu_message.setOnClickListener(this);
         ly_tab_menu_better.setOnClickListener(this);
-        ly_tab_menu_setting.setOnClickListener(this);
 
     }
-
+    //设置点按导航栏按钮后红点消失
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -78,21 +67,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 setSelected();
                 tab_menu_channel.setSelected(true);
                 tab_menu_channel_num.setVisibility(View.INVISIBLE);
+                text_topbar.setText("大学城二手交易平台");
                 break;
             case R.id.ly_tab_menu_message:
                 setSelected();
                 tab_menu_message.setSelected(true);
                 tab_menu_message_num.setVisibility(View.INVISIBLE);
+                text_topbar.setText("发布");
                 break;
             case R.id.ly_tab_menu_better:
+                //if(isLogin需要一个表示登录状态的变量){
                 setSelected();
                 tab_menu_better.setSelected(true);
                 tab_menu_better_num.setVisibility(View.INVISIBLE);
+                text_topbar.setText("我的");
+                /*} else{
+                            AlertDialog alert;
+                            AlertDialog.Buider alertBuilder = new AlertDialog.Builder(MainActivity.this;
+                            alertBuilder.setTitle("提醒")；
+                            alertBuilder.setIcon(R.drawable.警告图片的id）；
+                            alertBuilder.setMessage("当前尚未登录，请前往登录或注册！")；
+                            alertBuilder.setPositiveButton("确定", new DialogInterface.onClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which){
+                                    finish();
+                                    }
+                            });
+                            Intent intent = new Intent(MainActivity.this, LoginPage.class);
+                        }*/
                 break;
-            case R.id.ly_tab_menu_setting:
-                setSelected();
-                tab_menu_setting.setSelected(true);
-                tab_menu_setting_partner.setVisibility(View.INVISIBLE);
+                //暂时失败的跳转
+            case R.id.sample_product:
+                Intent intent = new Intent(MainActivity.this, ProductPage.class);
                 break;
         }
     }
@@ -102,6 +108,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tab_menu_channel.setSelected(false);
         tab_menu_message.setSelected(false);
         tab_menu_better.setSelected(false);
-        tab_menu_setting.setSelected(false);
     }
 }

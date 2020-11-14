@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="信息"
+            android:text="@string/tab_menu_profile"
             android:textColor="@color/text_topbar"
             android:textSize="18sp" />
 
@@ -120,37 +121,6 @@
             </RelativeLayout>
         </LinearLayout>
 
-
-        <LinearLayout
-            android:id="@+id/ly_tab_menu_setting"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/tab_menu_setting"
-                    style="@style/tab_menu_text"
-                    android:drawableTop="@drawable/tab_menu_setting"
-                    android:text="@string/tab_menu_alert" />
-
-                <ImageView
-                    android:id="@+id/tab_menu_setting_partner"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginLeft="-5dp"
-                    android:layout_toRightOf="@id/tab_menu_setting"
-                    android:visibility="gone"
-                    android:src="@mipmap/partner_red" />
-
-            </RelativeLayout>
-        </LinearLayout>
-
     </LinearLayout>
 
     <View
@@ -166,7 +136,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/div_tab_bar"
-        android:layout_below="@id/ly_top_bar"/>
+        android:layout_below="@id/ly_top_bar">
+
+        <LinearLayout
+            android:id="@+id/sample_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/sample_product_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/sample_product_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/sample_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </LinearLayout>
+
+    </FrameLayout>
 
 
 </RelativeLayout>
