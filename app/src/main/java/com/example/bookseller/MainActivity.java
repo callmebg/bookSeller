@@ -1,5 +1,6 @@
 package com.example.bookseller;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Fragment;
@@ -42,6 +43,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fManager = getFragmentManager();
         fTransaction = fManager.beginTransaction();
         fTransaction.add(R.id.ly_content, (Fragment) fg1, null);
+        ActionBar actionbar = getSupportActionBar();
+        if(actionbar != null){
+            actionbar.hide();
+        }
 
     }
 
