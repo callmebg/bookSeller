@@ -21,6 +21,8 @@ public class user {
 
     private String permissions;
 
+    private String email;
+
     public String getId() {
         return id;
     }
@@ -51,5 +53,13 @@ public class user {
 
     public String getPermissions() {
         return permissions;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

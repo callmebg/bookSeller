@@ -8,7 +8,9 @@ public enum ExceptionEnum {
 
     VALID_NAME(102,"重复命名"),
 
-    TWICE_LOGIN(103,"账号已在别处登录");
+    TWICE_LOGIN(103,"账号已在别处登录"),
+
+    VALID_EMAIL(104,"重复邮箱");
 
 
 

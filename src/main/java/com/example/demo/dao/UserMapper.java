@@ -37,4 +37,7 @@ public interface UserMapper extends BaseMapper<user> {
         return selectPage(new Page<>(pageNo,pageSize),new QueryWrapper<user>().eq("username",name));
     }
 
+    @Select("SELECT email FROM user WHERE email=#{email}")
+    List<String> getAllEmail(@Param("email") String email);
+
 }

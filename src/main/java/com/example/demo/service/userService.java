@@ -15,4 +15,6 @@ public interface userService {
     void changePassword(String newPassword,String uid);
 
     void changePermissions(String permission,String id);
+
+    List<String> getAllEmail(String email);
 }

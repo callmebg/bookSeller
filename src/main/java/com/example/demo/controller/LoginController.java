@@ -45,10 +45,12 @@ public class LoginController {
 
     @ApiOperation("register")
     @PostMapping("/register")
-    public SuccessResponse register(@RequestParam("username") String username,@RequestParam("password") String password) throws CustomException {
+    public SuccessResponse register(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email) throws CustomException {
+        if(!userService.getAllEmail(email).isEmpty()) throw new CustomException(ExceptionEnum.VALID_EMAIL,"register");
         if(userService.getAllUsername(username).isEmpty()){
         user u=new user();
         u.setUsername(username);
+        u.setEmail(email);
         BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
         u.setPassword(encoder.encode(password));
         userService.addUser(u);

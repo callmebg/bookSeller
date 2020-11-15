@@ -37,5 +37,10 @@ public class userServiceImpl implements userService {
         userMapper.changePermissions(permission,uid);
     }
 
+    @Override
+    public List<String> getAllEmail(String email) {
+        return userMapper.getAllEmail(email);
+    }
+
 
 }
