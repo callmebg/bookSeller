@@ -6,6 +6,7 @@ import com.example.demo.dto.Book;
 import com.example.demo.dto.Release;
 import com.example.demo.dto.ReleaseBookDto;
 import com.example.demo.dto.SuccessResponse;
+import com.example.demo.exception.CustomException;
 import com.example.demo.service.BookService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -40,9 +41,23 @@ public class BookController {
         return ResponseGenerator.getSuccessResponse();
     }
 
-    @PostMapping("/getRelease")
-    public SuccessResponse getRelease(@RequestParam("num") int number)
+    @PostMapping("/getNewRelease")
+    public SuccessResponse getNewRelease(@RequestParam("num") int number)
     {
        return ResponseGenerator.getSuccessResponse(bookService.getNewRelease(number));
+    }
+
+    @GetMapping("/getMyRelease")
+    public SuccessResponse getMyRelease(HttpServletRequest request)
+    {
+        String userId= JwtUtil.getUid(request.getHeader("Authorization").substring("Bearer ".length()));
+        return ResponseGenerator.getSuccessResponse(bookService.getMyRelease(userId));
+    }
+
+    @PostMapping("cancelRelease")
+    public SuccessResponse cancelRelease(@RequestParam("bookId") String bookId,HttpServletRequest request) throws CustomException {
+        String userId= JwtUtil.getUid(request.getHeader("Authorization").substring("Bearer ".length()));
+        bookService.cancelRelease(userId,bookId);
+        return ResponseGenerator.getSuccessResponse();
     }
 }

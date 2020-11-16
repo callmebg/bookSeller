@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.Book;
 import com.example.demo.dto.user;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface userService {
     void changePermissions(String permission,String id);
 
     List<String> getAllEmail(String email);
+
 }

@@ -10,7 +10,11 @@ public enum ExceptionEnum {
 
     TWICE_LOGIN(103,"账号已在别处登录"),
 
-    VALID_EMAIL(104,"重复邮箱");
+    VALID_EMAIL(104,"重复邮箱"),
+
+    DELETE_FAILED(105,"删除失败"),
+
+    VALID_BOOKID(106,"书籍不存在");
 
 
 

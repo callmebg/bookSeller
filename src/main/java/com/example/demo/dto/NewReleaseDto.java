@@ -16,6 +16,8 @@ public class NewReleaseDto {
 
     private double price;
 
+    private String date;
+
     public double getPrice() {
         return price;
     }
@@ -62,5 +64,13 @@ public class NewReleaseDto {
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
