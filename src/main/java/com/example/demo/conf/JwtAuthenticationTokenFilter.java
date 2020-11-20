@@ -68,6 +68,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         {
              log.info("二次登录");
              dealWithError(response,e.getMessage());
+        }catch (io.jsonwebtoken.MalformedJwtException e)
+        {
+            dealWithError(response,"token无效");
         }
         filterChain.doFilter(request,response);
     }
