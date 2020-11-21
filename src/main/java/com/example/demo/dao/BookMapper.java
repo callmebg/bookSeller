@@ -7,6 +7,7 @@ import com.example.demo.dto.ReleaseBookDo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,4 +29,8 @@ public interface BookMapper extends BaseMapper<Book> {
     {
         return selectOne(new QueryWrapper<Book>().eq("uid",bookId));
     }
+
+    @Update("UPDATE book SET url=#{url} WHERE uid=#{bookId}")
+    void updateUrlById(@Param("bookId") String bookId,@Param("url")String url);
+
 }

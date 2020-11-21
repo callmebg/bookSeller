@@ -14,7 +14,9 @@ public enum ExceptionEnum {
 
     DELETE_FAILED(105,"删除失败"),
 
-    VALID_BOOKID(106,"书籍不存在");
+    VALID_BOOKID(106,"书籍不存在"),
+
+    VALID_IMG(107,"图片不存在");
 
 
 

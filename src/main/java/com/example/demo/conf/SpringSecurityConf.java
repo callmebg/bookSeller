@@ -40,7 +40,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register",
                         "/userLogin","/swagger-ui.html"
                 ,"/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**","/favicon.ico"
-                ,"/","/applications",
+                ,"/","/applications","/**/**.jpg",
                 "/assets/**","/sba-settings.js").permitAll()
                 .anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

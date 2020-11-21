@@ -2,12 +2,15 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dao.BookCollectMapper;
 import com.example.demo.dao.BookMapper;
+import com.example.demo.dto.Book;
 import com.example.demo.dto.BookCollect;
 import com.example.demo.exception.CustomException;
 import com.example.demo.exception.ExceptionEnum;
 import com.example.demo.service.BookCollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class BookCollectServiceImpl implements BookCollectService {
@@ -29,5 +32,10 @@ public class BookCollectServiceImpl implements BookCollectService {
     public void cancelCollectBook(String userId, String bookId) throws CustomException {
         int Exception=bookCollectMapper.deleteCollect(bookId,userId);
         if(Exception==0) throw  new CustomException(ExceptionEnum.VALID_BOOKID,"collectBook");
+    }
+
+    @Override
+    public List<Book> selectAllCollectBook(String userId) {
+        return bookCollectMapper.selectAllCollect(userId);
     }
 }
