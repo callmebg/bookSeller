@@ -8,4 +8,12 @@
     <string name="tab_menu_profile">发布</string>
     <string name="tab_menu_pay">我的</string>
 
+    <string name="product_title">商品标题</string>
+    <string name="product_pic">商品图片</string>
+    <string name="title_activity_base">MainActivity</string>
+    <string name="title_home">主页</string>
+    <string name="title_dashboard">发布</string>
+    <string name="title_notifications">我的</string>
+
+
 </resources>

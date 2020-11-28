@@ -3,6 +3,8 @@ package com.example.bookseller;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tab_menu_better_num;
     private TextView text_topbar;
     private LinearLayout sample_product;
+    private ProductPage productPage;
+    private Button btn_test_jump;
 
 
     @Override
@@ -53,10 +57,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tab_menu_better_num = (TextView) findViewById(R.id.tab_menu_better_num);
         text_topbar = (TextView) findViewById(R.id.txt_topbar);
         sample_product = (LinearLayout) findViewById(R.id.sample_product);
+        btn_test_jump = (Button) findViewById(R.id.btn_test_jump);
 
         ly_tab_menu_channel.setOnClickListener(this);
         ly_tab_menu_message.setOnClickListener(this);
         ly_tab_menu_better.setOnClickListener(this);
+        btn_test_jump.setOnClickListener(this);
 
     }
     //设置点按导航栏按钮后红点消失
@@ -94,11 +100,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                             });
                             Intent intent = new Intent(MainActivity.this, LoginPage.class);
+                            startActivity(intent);
                         }*/
                 break;
-                //暂时失败的跳转
-            case R.id.sample_product:
+                //仅供测试按钮
+            case R.id.btn_test_jump:
+                /*productPage = new ProductPage();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.ly_content, productPage, "Product");*/
                 Intent intent = new Intent(MainActivity.this, ProductPage.class);
+                startActivity(intent);
                 break;
         }
     }
