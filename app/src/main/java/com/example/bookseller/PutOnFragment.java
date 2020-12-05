@@ -109,6 +109,7 @@ public class PutOnFragment extends Fragment {
                     }
                     else{
                         //调用函数上传到数据库
+
                         Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), BaseActivity.class);
                         getContext().startActivity(intent);
