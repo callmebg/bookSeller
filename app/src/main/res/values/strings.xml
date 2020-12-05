@@ -1,3 +1,37 @@
 <resources>
-    <string name="app_name">bookSeller</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="tab_menu_alert">首页</string>
+    <string name="tab_menu_profile">发布</string>
+    <string name="tab_menu_pay">我的</string>
+
+    <string name="product_title">商品标题</string>
+    <string name="product_pic">商品图片</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="title_home">主页</string>
+    <string name="title_dashboard">发布</string>
+    <string name="title_notifications">我的</string>
+    <string name="ip">47.107.117.59</string>
+
+    <string name="port">80</string>
+
+    <string name="app_name">BookSeller</string>
+
+    <string name="username">username01</string>
+
+    <string name="favorite">我收藏的</string>
+
+    <string name="sell">我卖出的</string>
+
+    <string name="buy">我买到的</string>
+
+    <string name="publish">我发布的</string>
+
+    <string name="object">宝贝</string>
+
+    <string name="loginTitle">大学城二手交易平台</string>
+
+
 </resources>
