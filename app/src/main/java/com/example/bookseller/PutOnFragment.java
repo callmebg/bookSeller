@@ -94,10 +94,10 @@ public class PutOnFragment extends Fragment {
             @Override
             public void onClick(View view){
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
-                String username = sharedPreferences.getString("username", "");
+                Boolean is_login = sharedPreferences.getBoolean("is_login", false);
                 putOnEvent.setDetail(storyView.getText().toString());
 
-                if(!username.equals("")){
+                if(is_login){
                     if(putOnEvent.getDetail().equals("")){
                         Toast.makeText(getActivity(), "请补充描述", Toast.LENGTH_SHORT).show();
                     }
@@ -117,6 +117,8 @@ public class PutOnFragment extends Fragment {
                 }
                 else{
                     Toast.makeText(getActivity(), "请先登录哦", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(),LoginActivity01.class);
+                    startActivity(intent);
                 }
             }
         });

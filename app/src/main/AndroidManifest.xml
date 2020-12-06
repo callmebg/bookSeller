@@ -27,7 +27,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity01"/>
-        <activity android:name=".MainActivity1"/>
         <activity android:name=".LoginActivity01"/>
 
         <activity android:name=".FavoriteActivity01"/>

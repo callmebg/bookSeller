@@ -1,12 +1,9 @@
 package com.example.bookseller;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -20,7 +17,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.bookseller.ui.home.HomeFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -82,7 +78,7 @@ public class BaseActivity extends AppCompatActivity {
                         break;
                     case R.id.navigation_user:
                         //viewPager.setCurrentItem(2);
-                        Intent intent = new Intent(BaseActivity.this, MainActivity1.class);
+                        Intent intent = new Intent(BaseActivity.this, MainActivity.class);
                         startActivity(intent);
                         break;
                 }
