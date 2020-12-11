@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 测试：暂时跳转到登录页面
-        this.setChatActivity(LoginActivity01.class);
+//        this.setChatActivity(LoginActivity01.class);
     }
 
     /**
