@@ -8,6 +8,10 @@ import android.widget.EditText;
 
 import java.util.List;
 
+/**
+ * 当列表中存在有 EditText 没有被填充时，相应的按钮将被设置未不可点击且变为半透明；
+ * 当列表中所有 EditText 都被填充时，按钮被设置未可点击并变为完全不透明。
+ */
 public class TextWatcherImpl01 implements TextWatcher {
 
     private Button button;
@@ -17,6 +21,8 @@ public class TextWatcherImpl01 implements TextWatcher {
         this.list = list;
         this.button = button;
         ButtonUtils.setButtonDisabled(button);
+        for (EditText editText : list)
+            editText.addTextChangedListener(this);
     }
 
     @Override

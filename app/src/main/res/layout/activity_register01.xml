@@ -27,23 +27,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerTitle">
-
-        <TextView
-            android:id="@+id/headImgTitle"
-            android:layout_width="85dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="头像："
-            android:textSize="24sp"
-            tools:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/regHeadImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/add" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/registerTitle" />
 
     <LinearLayout
         android:id="@+id/regNicknameLayout"
@@ -60,7 +44,7 @@
             android:layout_width="85dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="昵称："
+            android:text="名字："
             android:textSize="24sp"
             tools:textStyle="bold" />
 
@@ -69,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/input_border"
-            android:hint="请输入昵称" />
+            android:hint="请输入名字" />
     </LinearLayout>
 
     <LinearLayout
@@ -150,7 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/input_border"
-            android:hint="请再次输入密码"
+            android:hint="请再次输输入确认"
             android:inputType="textPassword" />
     </LinearLayout>
 

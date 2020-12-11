@@ -20,14 +20,8 @@
     <string name="app_name">BookSeller</string>
 
     <string name="username">username01</string>
-
     <string name="favorite">我收藏的</string>
-
-    <string name="sell">我卖出的</string>
-
-    <string name="buy">我买到的</string>
-
-    <string name="publish">我发布的</string>
+    <string name="chat">聊天记录</string>
 
     <string name="object">宝贝</string>
 

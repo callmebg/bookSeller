@@ -3,6 +3,7 @@ package com.example.bookseller;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,30 +26,30 @@ import okhttp3.Response;
 
 public class LoginActivity01 extends AppCompatActivity {
 
+    private String username;
+    private Toast toast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login01);
+        this.setTitle("登录");
 
         Button loginBtn = (Button) findViewById(R.id.login);
         Button registerBtn = (Button) findViewById(R.id.register);
 
-        EditText mailboxText = (EditText) findViewById(R.id.mailbox);
+        EditText usernameText = (EditText) findViewById(R.id.username);
         EditText passwordText = (EditText) findViewById(R.id.password);
         List<EditText> editTextList = new ArrayList<>();
-        editTextList.add(mailboxText);
+        editTextList.add(usernameText);
         editTextList.add(passwordText);
         TextWatcher textWatcher = new TextWatcherImpl01(loginBtn, editTextList);
-        mailboxText.addTextChangedListener(textWatcher);
-        passwordText.addTextChangedListener(textWatcher);
 
         loginBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity01.this, RegisterActivity01.class);
-            startActivity(intent);
-            String mail = mailboxText.getText().toString();
+            username = usernameText.getText().toString();
             String password = passwordText.getText().toString();
-            System.out.println(mail + ":" + password);
-            login(mail, password);
+            System.out.println(username + ":" + password);
+            login(username, password);
         });
 
         registerBtn.setOnClickListener(view -> {
@@ -61,28 +62,36 @@ public class LoginActivity01 extends AppCompatActivity {
      * 当用户填写的邮箱和密码不为空时，提交到服务器登录，
      * 否则提示用户输入邮箱或密码
      *
-     * @param mail     用户邮箱
+     * @param username 用户邮箱
      * @param password 用户密码
      */
-    private void login(String mail, String password) {
-        Toast.makeText(LoginActivity01.this, "登录中...", Toast.LENGTH_LONG).show();
+    private void login(String username, String password) {
+        toast = Toast.makeText(LoginActivity01.this, "登录中...", Toast.LENGTH_SHORT);
+        toast.show();
 
         OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = new FormBody.Builder().add("mail", mail).add("password", password).build();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .build();
+
         String ip = this.getResources().getString(R.string.ip);
         String port = this.getResources().getString(R.string.port);
-        String loginUrl = "http://" + ip + ":" + port + "/login";
-        Request request = new Request.Builder().url(loginUrl).post(requestBody).build();
+        String loginUrl = "http://" + ip + ":" + port + "/userLogin";
+        Request request = new Request.Builder()
+                .url(loginUrl)
+                .post(requestBody)
+                .build();
 
+        NetworkUtils.forceNetworkRequesting();
         try (Response response = client.newCall(request).execute()) {
             String responseData = response.body().string();
+            System.out.println("login-responseData:" + responseData);
             handlerResponseData(responseData);
-
-            // 登录完成之后跳转到 “我的” 页面
-            Intent intent = new Intent(LoginActivity01.this, MainActivity.class);
-            startActivity(intent);
         } catch (IOException e) {
-            Toast.makeText(LoginActivity01.this, "网络异常", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity01.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("网络异常：");
+            e.printStackTrace();
         }
     }
 
@@ -96,26 +105,65 @@ public class LoginActivity01 extends AppCompatActivity {
         try {
             jsonObject = new JSONObject(responseData);
             String status = jsonObject.getString("status");
-            if (status.equals("20000"))
-                Toast.makeText(LoginActivity01.this, "密码错误", Toast.LENGTH_LONG).show();
-            else if (status.equals("10000")) {
-                Toast.makeText(LoginActivity01.this, "登录成功", Toast.LENGTH_LONG).show();
-                String message = jsonObject.getString("message");
-                System.out.println(message);
+            switch (status) {
+                case "200": {
+                    String token = jsonObject.getString("data");
+                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                    editor.putString("token", token);
+                    editor.putString("username", username);
+                    editor.putBoolean("is_login", true);
+                    editor.apply();
 
-                String uuid = jsonObject.getString("uuid");
-                String profile_url = jsonObject.getString("profile_url");
-                String nick = jsonObject.getString("nick");
-                SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                editor.putString("uuid", uuid);
-                editor.putString("profile_url", profile_url);
-                editor.putString("nick", nick);
-                editor.putBoolean("is_login", true);
-                editor.apply();
+                    if (toast != null) {
+                        toast.cancel();
+                        Toast.makeText(LoginActivity01.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    }
+                    Intent intent = new Intent(LoginActivity01.this, MainActivity.class);
+                    startActivity(intent);
+                    break;
+                }
+                case "500": {    // 用户名或密码不正确
+                    if (toast != null) {
+                        toast.cancel();
+                        Toast.makeText(LoginActivity01.this, "名字和密码不正确", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                default: {
+                    Toast.makeText(LoginActivity01.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (JSONException e) {
+            Toast.makeText(LoginActivity01.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("注册返回信息处理异常：");
             e.printStackTrace();
         }
-
     }
+}
+
+class NetworkUtils {
+
+    public static final String REQUEST_URL_PREFIX = "http://47.107.117.59:80";
+
+    /**
+     * 为指定后缀添加前缀以形成完整的请求 url
+     *
+     * @param suffix 后缀，如 /test,test02
+     * @return 相应的请求 url，如 http://47.107.117.59:80/test, http://47.107.117.59:80/test02
+     */
+    public static String getRequestUrl(String suffix) {
+        if (!suffix.startsWith("/"))
+            suffix = "/" + suffix;
+        return REQUEST_URL_PREFIX + suffix;
+    }
+
+    // 强制在主线程中进行网络请求
+    public static void forceNetworkRequesting() {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+    }
+
+
 }

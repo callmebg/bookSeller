@@ -30,20 +30,20 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <TextView
-            android:id="@+id/mailboxTitle"
+            android:id="@+id/usernameTitle"
             android:layout_width="85dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="邮箱："
+            android:text="名字："
             android:textSize="24sp"
             tools:textStyle="bold" />
 
         <EditText
-            android:id="@+id/mailbox"
+            android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/input_border"
-            android:hint="请输入邮箱" />
+            android:hint="请输入名字" />
     </LinearLayout>
 
     <LinearLayout
@@ -80,8 +80,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:background="@drawable/btn_normal"
-        android:text="登录"
         android:textColor="@android:color/white"
+        android:text="登录"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
