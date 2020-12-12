@@ -19,14 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookSeller"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".TestActivity01"></activity>
         <activity android:name=".RegisterActivity01" />
         <activity android:name=".LoginActivity01" />
         <activity android:name=".UserInfoActivity01" />
         <activity android:name=".ChangePasswordActivity01" />
-        <activity
-            android:name=".FavoriteActivity01"
-            android:theme="@style/NoTitle" />
+        <activity android:name=".FavoriteActivity01" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/NoTitle">

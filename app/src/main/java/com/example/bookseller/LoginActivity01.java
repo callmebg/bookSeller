@@ -62,7 +62,7 @@ public class LoginActivity01 extends AppCompatActivity {
      * 当用户填写的邮箱和密码不为空时，提交到服务器登录，
      * 否则提示用户输入邮箱或密码
      *
-     * @param username 用户邮箱
+     * @param username 用户名字
      * @param password 用户密码
      */
     private void login(String username, String password) {

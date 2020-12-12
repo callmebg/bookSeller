@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView headImageView;
     private TextView usernameView;
-    private static Class<?> toChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,24 +44,10 @@ public class MainActivity extends AppCompatActivity {
         // 由 “我的” 跳转到 “聊天记录”
         Button chat = (Button) findViewById(R.id.chat);
         chat.setOnClickListener(view -> {
-            if (toChat != null) {
-                Intent intent = new Intent(this, toChat);
-                startActivity(intent);
-            }
+//            Intent intent = new Intent(this, .class);
+//            startActivity(intent);
         });
 
-        // 测试：暂时跳转到登录页面
-//        this.setChatActivity(LoginActivity01.class);
-    }
-
-    /**
-     * 设置点击“聊天记录”按钮后跳转的页面
-     * 如，聊天记录的 Activity 名为 ChatActivity,可以在该 Activity 中添加
-     * MainActivity.setChatActivity(ChatActivity.class);
-     * 语句，点击“聊天记录”按钮后将会跳转到相应页面
-     */
-    protected static void setChatActivity(Class<?> chatActivityClass) {
-        toChat = chatActivityClass;
     }
 
     // 显示头像和名字
