@@ -1,12 +1,15 @@
 package com.example.bookseller;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,16 +18,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -32,13 +43,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ChatList extends AppCompatActivity {
+    private static final String TAG = "ChatList";
     private List<ChatListItem> chatList = new ArrayList<>();
     private RecyclerView msgRecyclerView;
     private ChatListItemAdapter adapter;
     private ImageView back;
     private TextView refresh;
 
-    private String chaterUid, chaterName;
+    private String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +58,12 @@ public class ChatList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatlist);
 
-/*
-        //接收对象的id和名字
-        Intent intent = getIntent();
-        chaterUid = intent.getStringExtra("chaterUid");
-        chaterName = intent.getStringExtra("chaterName");
-*/
-
+        //我自己的id
+        uuid = getmyuuid();
+        if(uuid == null){
+            Toast.makeText(ChatList.this, "网络错误，请稍后重试",Toast.LENGTH_LONG).show();
+            finish();
+        }
         initView();//初始化UI控件
         initData();//初始化数据
         initListener();//初始化事件监听器
@@ -88,13 +99,7 @@ public class ChatList extends AppCompatActivity {
     private void initmessage() {
         chatList.clear();
         //访问接口获取数据
-
-        //getChatMessage();
-
-        ChatListItem msg1 = new ChatListItem("110", "张思");
-        chatList.add(msg1);
-        ChatListItem msg2 = new ChatListItem("120", "张si");
-        chatList.add(msg2);
+        getAllChatMessage();
     }
 
 
@@ -120,84 +125,73 @@ public class ChatList extends AppCompatActivity {
         super.onResume();
     }
 
-    private void getChatMessage() {
-        String ip = this.getResources().getString(R.string.ip);
-        String port = this.getResources().getString(R.string.port);
-        String URL = "http://" + ip + ":" + port + "/getChatMessage";
+    private void getAllChatMessage() {
+        String URLNAME = "/getUserAllChatMessage";
         SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
-        String token = sp.getString("token", null);
+        String token = "Bearer " + sp.getString("token", "");
 
-        Toast toast = Toast.makeText(ChatList.this, "刷新中...", Toast.LENGTH_SHORT);
-        toast.show();
+        Toast.makeText(ChatList.this, "刷新中...", Toast.LENGTH_SHORT).show();
 
-        MultipartBody.Builder builder=new MultipartBody.Builder();
-        builder.addFormDataPart("releaseId",chaterUid);    //对方uid
-        RequestBody requestBody=builder.build();
+        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URL)
-                .addHeader("Authorization",token)     //登录认证得到的token
-                .post(requestBody)
+                .url(NetworkUtils.getRequestUrl(URLNAME))
+                .addHeader("Authorization", token)
+                .get()
                 .build();
-        OkHttpClient okHttpClient=new OkHttpClient();
-        okHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("cfcf",e.getMessage());
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseBody=response.body().string();
-                Log.d("cfcf",responseBody);
+        NetworkUtils.forceNetworkRequesting();
+        try (Response response = client.newCall(request).execute()) {
+            String chatlistResponseData = response.body().string();
+            Log.d("chatlistResponseData", chatlistResponseData);
+
+            // 处理返回信息
+            JSONObject jsonObject = new JSONObject(chatlistResponseData);
+            boolean isSuccess = jsonObject.getBoolean("success");
+            Log.d("chatlistResponseData", String.valueOf(isSuccess));
+            if (isSuccess) {
+                // 处理信息
+                handlerResponseData(jsonObject.getString("data"));
             }
-        });
+        } catch (IOException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("网络异常：");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("注销返回信息处理异常：");
+            e.printStackTrace();
+        }
 
     }
 
     /**
-     * 处理由服务器返回的相关登录数据
+     * 处理由服务器返回的相关聊天数据
      *
      * @param responseData 服务器返回的数据
      */
-    private void handlerResponseData(String responseData) {
-        /*
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(responseData);
-            String status = jsonObject.getString("status");
-            switch (status) {
-                case "200": {
-                    String token = jsonObject.getString("data");
-                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                    editor.putString("token", token);
-                    editor.putString("username", username);
-                    editor.putBoolean("is_login", true);
-                    editor.apply();
+    private void handlerResponseData(String responseData) throws JSONException {
+        //给对方uuid去个重
+        HashMap<String, String> tmap  = new HashMap<String, String>();
 
-                    if (toast != null) {
-                        toast.cancel();
-                        Toast.makeText(LoginActivity01.this, "登录成功", Toast.LENGTH_SHORT).show();
-                    }
-                    Intent intent = new Intent(LoginActivity01.this, MainActivity.class);
-                    startActivity(intent);
-                    break;
-                }
-                case "500": {    // 用户名或密码不正确
-                    if (toast != null) {
-                        toast.cancel();
-                        Toast.makeText(LoginActivity01.this, "名字和密码不正确", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                }
-                default: {
-                    Toast.makeText(LoginActivity01.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
-                }
+        Log.d("chatlistResponseData_handler", responseData);
+        JSONArray array = new JSONArray(responseData);
+
+        //tmap的keys就是去重的对方id
+        for(int i = 0; i < array.length(); i++){
+            JSONObject t = array.optJSONObject(i);
+
+            if(!t.getString("recId").equals(uuid)){
+                tmap.put(t.getString("recId"), "张三");
             }
-        } catch (JSONException e) {
-            Toast.makeText(LoginActivity01.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
-            System.out.println("注册返回信息处理异常：");
-            e.printStackTrace();
-        }*/
+            if(!t.getString("senId").equals(uuid)){
+                tmap.put(t.getString("senId"), "张三");
+            }
+        }
+        Set<String> tset = tmap.keySet();
+        for(String t : tset){
+            Log.d("ttt", t);
+            chatList.add(new ChatListItem(t, tmap.get(t)));
+        }
     }
     /**
      * 定义RecyclerView选项单击事件的回调接口
@@ -213,6 +207,63 @@ public class ChatList extends AppCompatActivity {
         //        map.put("img",R.drawable.delete);
         //        map.put("text","x1");
         //所以我的是map类型的，那如果是item中只有text的话比如List<String>，那么data就改成String类型
+    }
+
+    /**
+     * 获取用户uuid
+     */
+    private String getmyuuid() {
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        String token = "Bearer " + sp.getString("token", "");
+
+        OkHttpClient client = new OkHttpClient();
+        String userInfoUrl = NetworkUtils.getRequestUrl("/getUserDetails");
+        Request request = new Request.Builder()
+                .url(userInfoUrl)
+                .addHeader("Authorization", token)
+                .get().build();
+
+        NetworkUtils.forceNetworkRequesting();
+        try (Response response = client.newCall(request).execute()) {
+            String responseData = response.body().string();
+            System.out.println("userInfo-responseData:" + responseData);
+            if (TextUtils.isEmpty(responseData)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("登录凭证失效")
+                        .setMessage("登录凭证失效，请重新登录")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            Intent intent = new Intent(this, LoginActivity01.class);
+                            startActivity(intent);
+                        })
+                        .show();
+                return null;
+            }
+            String ans;
+            try {
+                JSONObject jsonObject = new JSONObject(responseData);
+                String status = jsonObject.getString("status");
+                switch (status) {
+                    case "200": {
+                        JSONObject data = new JSONObject(jsonObject.getString("data"));
+                        ans = data.getString("id");
+                        return ans;
+                    }
+                    default: {
+                        return null;
+                    }
+                }
+            } catch (JSONException e) {
+                Toast.makeText(ChatList.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+                System.out.println("获取用户uuid处理异常：");
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            Toast.makeText(ChatList.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("网络异常：");
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
