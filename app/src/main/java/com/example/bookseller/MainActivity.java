@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         // 由 “我的” 跳转到 “聊天记录”
         Button chat = (Button) findViewById(R.id.chat);
         chat.setOnClickListener(view -> {
-//            toOtherActivity(.class);
+            toOtherActivity(ChatList.class);
         });
     }
 

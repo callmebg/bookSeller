@@ -160,9 +160,9 @@ public class FavoriteActivity01 extends AppCompatActivity {
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 bookView = itemView;
-                bookImage = itemView.findViewById(R.id.book_image);
+                /*bookImage = itemView.findViewById(R.id.book_image);
                 bookTitle = itemView.findViewById(R.id.book_title);
-                bookPrice = itemView.findViewById(R.id.book_price);
+                bookPrice = itemView.findViewById(R.id.book_price);*/
             }
         }
 
