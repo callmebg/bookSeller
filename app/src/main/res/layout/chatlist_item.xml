@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_chat"
+    android:padding="10dp">
+    <!-- 单独聊天信息布局-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/chatList_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        >
+        <ImageView
+            android:id="@+id/chatlist_picture"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/head"
+            />
+        <TextView
+            android:id="@+id/chatlist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:textSize="40dp"
+            android:typeface="monospace"
+            android:text="张三"
+            />
+    </LinearLayout>
+
+</LinearLayout>

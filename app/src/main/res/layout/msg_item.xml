@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_chat"
+    android:padding="10dp">
+    <!-- 左边信息布局-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/left_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        >
+        <!--android:maxLines="7"，最多显示7行。（这个和android:singleline = "true"效果一样）
+         android:ellipsize="end"，这个意思就是多出来的字符用英语省略号“...”代替,“end”表示省略号在末尾显示。可选的属性有："start"：显示在开头，"middle"：显示在中间，"marquee"：跑马灯一样显示。-
+         android:maxEms="7",这个代表最多显示7个字符-->
+        <TextView
+            android:id="@+id/left_msg_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="2020年12月15日10:59"
+            android:textColor="#000"
+            android:textSize="10dp"
+            android:typeface="monospace"
+            />
+        <TextView
+            android:id="@+id/left_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_margin="0dp"
+            android:gravity="left"
+            android:maxEms="15"
+            android:textColor="#FFF"
+            android:textSize="15dp"
+            android:typeface="monospace"
+            android:background="@drawable/message_left"/>
+    </LinearLayout>
+    <!-- 右边信息布局-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/right_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        >
+
+        <TextView
+            android:id="@+id/right_msg_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="2020年12月15日10:59"
+            android:textColor="#000"
+            android:textSize="10dp"
+            android:typeface="monospace"
+            />
+        <TextView
+            android:id="@+id/right_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="left"
+            android:textColor="#000"
+            android:textSize="15dp"
+            android:typeface="monospace"
+            android:maxEms="15"
+            android:background="@drawable/message_right"
+            />
+    </LinearLayout>
+</LinearLayout>

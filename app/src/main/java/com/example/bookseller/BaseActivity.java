@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.bookseller.ui.home.HomeFragment;
@@ -31,6 +32,22 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+
+
+        // 假设这里有一个跳转聊天按钮
+        Button chatB = findViewById(R.id.chatB);
+        chatB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction("chat_start");
+                startActivity(intent);
+            }
+        });
+
+
+
 
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){

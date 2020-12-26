@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         // 由 “我的” 跳转到 “聊天记录”
         Button chat = (Button) findViewById(R.id.chat);
         chat.setOnClickListener(view -> {
-//            Intent intent = new Intent(this, .class);
-//            startActivity(intent);
+            Intent intent = new Intent(this, ChatList.class);
+            startActivity(intent);
         });
 
     }
