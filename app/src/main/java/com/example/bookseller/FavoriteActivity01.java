@@ -1,7 +1,9 @@
 package com.example.bookseller;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,6 +92,17 @@ public class FavoriteActivity01 extends AppCompatActivity {
         try (Response response = client.newCall(request).execute()) {
             String responseData = response.body().string();
             System.out.println("favorite-responseData:" + responseData);
+            if (TextUtils.isEmpty(responseData)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("登录凭证失效")
+                        .setMessage("登录凭证失效，请重新登录")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            Intent intent = new Intent(this, LoginActivity01.class);
+                            startActivity(intent);
+                        })
+                        .show();
+                return false;
+            }
             return handleResponseData(responseData);
         } catch (IOException e) {
             Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
