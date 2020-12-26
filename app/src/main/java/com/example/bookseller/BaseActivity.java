@@ -35,20 +35,6 @@ public class BaseActivity extends AppCompatActivity {
 
 
 
-        // 假设这里有一个跳转聊天按钮
-        Button chatB = findViewById(R.id.chatB);
-        chatB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setAction("chat_start");
-                startActivity(intent);
-            }
-        });
-
-
-
-
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.hide();
