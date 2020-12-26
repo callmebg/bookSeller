@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -43,6 +45,7 @@ public class UserInfoActivity01 extends AppCompatActivity {
     private String id;
     private String headImgUrl = null;
     private ImageView headImgInfoView;
+    private Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +53,65 @@ public class UserInfoActivity01 extends AppCompatActivity {
         setContentView(R.layout.activity_user_info01);
         setTitle("个人信息");
 
+        logoutButton = findViewById(R.id.logoutButton);
+        ButtonUtils.setButtonDisabled(logoutButton);
+        logoutButton.setOnClickListener(view -> {
+            logout();
+        });
+
         if (getUserInfo()) {
+            ButtonUtils.setButtonEnabled(logoutButton);
             // 显示用户信息：头像，邮箱，名字和 id
             fillUserInfo();
             // 修改密码和更换头像
             changeInfo();
+        }
+    }
+
+    // 注销
+    private void logout() {
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        String token = "Bearer " + sp.getString("token", "");
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(NetworkUtils.getRequestUrl("/userLogout"))
+                .addHeader("Authorization", token)
+                .post(new FormBody.Builder().build())
+                .build();
+
+        NetworkUtils.forceNetworkRequesting();
+        try (Response response = client.newCall(request).execute()) {
+            String logoutResponseData = response.body().string();
+            System.out.println("logoutResponseData" + logoutResponseData);
+
+            // 处理注销返回信息
+            JSONObject jsonObject = new JSONObject(logoutResponseData);
+            boolean isSuccess = jsonObject.getBoolean("success");
+            if (isSuccess) {
+                // 清除用户的信息
+                SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                editor.clear();
+                editor.apply();
+                ButtonUtils.setButtonDisabled(logoutButton);
+
+                new AlertDialog.Builder(this)
+                        .setTitle("注销成功")
+                        .setMessage("注销成功")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            Intent intent = new Intent(this, MainActivity.class);
+                            startActivity(intent);
+                        })
+                        .show();
+            }
+        } catch (IOException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("网络异常：");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("注销返回信息处理异常：");
+            e.printStackTrace();
         }
     }
 
@@ -223,7 +280,7 @@ public class UserInfoActivity01 extends AppCompatActivity {
     }
 
     /**
-     * 获取用户信息：如果用户未登录，则跳转到登录页面，并返回 false；如果已登录，则获取用户信息，返回 true
+     * 获取用户信息：如果用户未登录，则返回 false；如果已登录，则获取用户信息，返回 true
      */
     private boolean getUserInfo() {
         SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
@@ -240,6 +297,17 @@ public class UserInfoActivity01 extends AppCompatActivity {
         try (Response response = client.newCall(request).execute()) {
             String responseData = response.body().string();
             System.out.println("userInfo-responseData:" + responseData);
+            if (TextUtils.isEmpty(responseData)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("登录凭证失效")
+                        .setMessage("登录凭证失效，请重新登录")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            Intent intent = new Intent(this, LoginActivity01.class);
+                            startActivity(intent);
+                        })
+                        .show();
+                return false;
+            }
             return handleResponseData(responseData);
         } catch (IOException e) {
             Toast.makeText(UserInfoActivity01.this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
@@ -264,9 +332,7 @@ public class UserInfoActivity01 extends AppCompatActivity {
                     return true;
                 }
                 default: {
-                    Intent intent = new Intent(this, LoginActivity01.class);
-                    startActivity(intent);
-                    return true;
+                    return false;
                 }
             }
         } catch (JSONException e) {

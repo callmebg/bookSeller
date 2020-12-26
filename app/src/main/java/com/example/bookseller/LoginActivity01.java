@@ -1,9 +1,11 @@
 package com.example.bookseller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class LoginActivity01 extends AppCompatActivity {
 
@@ -125,7 +129,7 @@ public class LoginActivity01 extends AppCompatActivity {
                 case "500": {    // 用户名或密码不正确
                     if (toast != null) {
                         toast.cancel();
-                        Toast.makeText(LoginActivity01.this, "名字和密码不正确", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity01.this, "名字或密码不正确", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 }
@@ -164,6 +168,23 @@ class NetworkUtils {
             StrictMode.setThreadPolicy(policy);
         }
     }
+}
 
+class LoginUtil {
 
+    // 用户已登录返回 true，未登录返回 false
+    public static boolean isLogin(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("data", MODE_PRIVATE);
+        String username = sp.getString("username", null);
+        String token = sp.getString("token", null);
+        boolean isLogin = sp.getBoolean("is_login", false);
+        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(token) && isLogin == true) {
+            return true;
+        }
+
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        editor.apply();
+        return false;
+    }
 }

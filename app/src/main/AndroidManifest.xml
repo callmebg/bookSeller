@@ -19,7 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookSeller"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TestActivity01"></activity>
         <activity android:name=".RegisterActivity01" />
         <activity android:name=".LoginActivity01" />
         <activity android:name=".UserInfoActivity01" />
