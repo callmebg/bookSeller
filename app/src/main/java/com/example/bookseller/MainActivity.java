@@ -8,9 +8,17 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,13 +71,27 @@ public class MainActivity extends AppCompatActivity {
             usernameView.setText("名字：" + username);
 
             // 显示头像
-            String imagePath = sp.getString("imagePath", null);
-            System.out.println("main-headImagePath: " + imagePath);
-            if (imagePath != null) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                if (bitmap != null)
-                    headImageView.setImageBitmap(bitmap);
-            }
+            showUserImage();
+        }
+    }
+
+    // 显示头像
+    private void showUserImage() {
+        Request request = new Request.Builder()
+                .url(NetworkUtils.getUserImageUrl(username))
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        NetworkUtils.forceNetworkRequesting();
+        try (Response response = client.newCall(request).execute()) {
+            InputStream inputStream = response.body().byteStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            runOnUiThread(() -> headImageView.setImageBitmap(bitmap));
+
+            System.out.println("我的页面显示头像成功");
+        } catch (IOException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("我的页面获取头像失败：");
+            e.printStackTrace();
         }
     }
 
@@ -79,10 +101,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, cls);
             startActivityForResult(intent, 1);
         } else {
-            Intent intent = new Intent(this, LoginActivity01.class);
-            startActivity(intent);
+            LoginUtil.toLoginActivity(this);
         }
     }
-
 
 }

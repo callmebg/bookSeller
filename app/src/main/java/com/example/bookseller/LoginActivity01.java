@@ -148,6 +148,8 @@ public class LoginActivity01 extends AppCompatActivity {
 class NetworkUtils {
 
     public static final String REQUEST_URL_PREFIX = "http://47.107.117.59:80";
+    public static final String USER_IMAGE_DOWNLOAD_URL_PREFIX = REQUEST_URL_PREFIX + "/static/";
+
 
     /**
      * 为指定后缀添加前缀以形成完整的请求 url
@@ -161,6 +163,16 @@ class NetworkUtils {
         return REQUEST_URL_PREFIX + suffix;
     }
 
+    /**
+     * 返回获取用户头像的请求路径
+     *
+     * @param username 用户名字
+     * @return
+     */
+    public static String getUserImageUrl(String username) {
+        return USER_IMAGE_DOWNLOAD_URL_PREFIX + username + ".jpg";
+    }
+
     // 强制在主线程中进行网络请求
     public static void forceNetworkRequesting() {
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -168,11 +180,18 @@ class NetworkUtils {
             StrictMode.setThreadPolicy(policy);
         }
     }
+
 }
 
 class LoginUtil {
 
-    // 用户已登录返回 true，未登录返回 false
+    /**
+     * 用户已登录返回 true；
+     * 未登录则清楚存储在本地的用户信息，并返回 false
+     *
+     * @param context 需要判断是否登录的活动
+     * @return
+     */
     public static boolean isLogin(Context context) {
         SharedPreferences sp = context.getSharedPreferences("data", MODE_PRIVATE);
         String username = sp.getString("username", null);
@@ -182,9 +201,29 @@ class LoginUtil {
             return true;
         }
 
-        SharedPreferences.Editor editor = sp.edit();
+        clearUserInfo(context);
+        return false;
+    }
+
+    /**
+     * 清除存储在本地的用户信息
+     *
+     * @param context 需要判断是否登录的活动或需要跳转到登录页面的活动
+     */
+    private static void clearUserInfo(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("data", MODE_PRIVATE).edit();
         editor.clear();
         editor.apply();
-        return false;
+    }
+
+    /**
+     * 跳转到登录页面，跳转之前
+     *
+     * @param context 需要跳转到登录页面的活动
+     */
+    public static void toLoginActivity(Context context) {
+        clearUserInfo(context);
+        Intent intent = new Intent(context, LoginActivity01.class);
+        context.startActivity(intent);
     }
 }

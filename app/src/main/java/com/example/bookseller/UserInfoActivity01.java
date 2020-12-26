@@ -28,11 +28,16 @@ import androidx.core.content.ContextCompat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class UserInfoActivity01 extends AppCompatActivity {
@@ -130,10 +135,26 @@ public class UserInfoActivity01 extends AppCompatActivity {
 
         // 显示头像
         headImgInfoView = findViewById(R.id.headImgInfo);
-        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
-        String imagePath = sp.getString("imagePath", null);
-        if (imagePath != null)
-            displayImage(imagePath);
+        showUserImage();
+    }
+
+    // 显示头像
+    private void showUserImage() {
+        Request request = new Request.Builder()
+                .url(NetworkUtils.getUserImageUrl(username))
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        NetworkUtils.forceNetworkRequesting();
+        try (Response response = client.newCall(request).execute()) {
+            InputStream inputStream = response.body().byteStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            runOnUiThread(() -> headImgInfoView.setImageBitmap(bitmap));
+            System.out.println("个人信息页面显示头像成功");
+        } catch (IOException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("我的页面获取头像失败：");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -243,11 +264,8 @@ public class UserInfoActivity01 extends AppCompatActivity {
                     }
                     displayImage(imagePath);
 
-                    // 保存头像本地路径
-                    System.out.println("imagePath:" + imagePath);
-                    SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                    editor.putString("imagePath", imagePath);
-                    editor.apply();
+                    // 将选择的头像上传到服务器
+                    uploadUserImage(imagePath);
                 }
                 break;
             }
@@ -299,11 +317,10 @@ public class UserInfoActivity01 extends AppCompatActivity {
             System.out.println("userInfo-responseData:" + responseData);
             if (TextUtils.isEmpty(responseData)) {
                 new AlertDialog.Builder(this)
-                        .setTitle("登录凭证失效")
-                        .setMessage("登录凭证失效，请重新登录")
+                        .setTitle("登录凭证过期")
+                        .setMessage("登录凭证过期，请重新登录")
                         .setPositiveButton("确定", (dialog, which) -> {
-                            Intent intent = new Intent(this, LoginActivity01.class);
-                            startActivity(intent);
+                            LoginUtil.toLoginActivity(this);
                         })
                         .show();
                 return false;
@@ -317,6 +334,12 @@ public class UserInfoActivity01 extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * 处理 获取用户信息 的返回信息
+     *
+     * @param responseData 服务器返回的响应体内容
+     * @return
+     */
     private boolean handleResponseData(String responseData) {
         try {
             JSONObject jsonObject = new JSONObject(responseData);
@@ -342,6 +365,76 @@ public class UserInfoActivity01 extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    /**
+     * 上传用户头像到服务器
+     *
+     * @param imagePath 头像的本地路径
+     */
+    private void uploadUserImage(String imagePath) {
+        // 保存头像本地路径
+//        System.out.println("imagePath:" + imagePath);
+        SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+//        editor.putString("imagePath", imagePath);
+//        editor.apply();
+
+        System.out.println("uploadUserImage()");
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        String username = sp.getString("username", null);
+        System.out.println("username:" + username);
+        String token = "Bearer " + sp.getString("token", null);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new MultipartBody.Builder()
+                .addFormDataPart("img", username + ".jpg", RequestBody.create(MediaType.parse("image/jpeg"), new File(imagePath)))
+                .build();
+        Request request = new Request.Builder()
+                .url(NetworkUtils.getRequestUrl("/userImgUpload"))
+                .addHeader("Authorization", token)     //登录认证得到的token
+                .post(requestBody)
+                .build();
+
+        NetworkUtils.forceNetworkRequesting();
+        try (Response response = client.newCall(request).execute()) {
+            String responseData = response.body().string();
+            System.out.println("userImgUpload-responseData:" + responseData);
+
+            // 处理用户头像上传返回信息
+            JSONObject jsonObject = new JSONObject(responseData);
+            String status = jsonObject.getString("status");
+            switch (status) {
+                case "200": {
+                    String imageUrl = jsonObject.getString("data");
+                    editor.putString("url", imageUrl);
+                    editor.apply();
+                    break;
+                }
+                case "403": {
+                    new AlertDialog.Builder(this)
+                            .setTitle("登录凭证失效")
+                            .setMessage("登录凭证失效，请重新登录")
+                            .setPositiveButton("确定", (dialog, which) -> {
+                                Intent intent = new Intent(this, LoginActivity01.class);
+                                startActivity(intent);
+                            })
+                            .show();
+                    break;
+                }
+                default: {
+                    Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        } catch (IOException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("网络异常：");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
+            System.out.println("上传用户头像返回信息处理异常：");
+            e.printStackTrace();
+        }
     }
 
 }

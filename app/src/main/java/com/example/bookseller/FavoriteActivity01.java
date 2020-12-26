@@ -2,6 +2,8 @@ package com.example.bookseller;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class FavoriteActivity01 extends AppCompatActivity {
     private void test01() {
         List<FavoriteBook> list = new ArrayList<>();
         for (int i = 1; i < 11; ++i) {
-            FavoriteBook book = new FavoriteBook("" + i + 1, "aaaaaaaaaaaa", 2.2 * i);
+            FavoriteBook book = new FavoriteBook();
             list.add(book);
         }
 
@@ -94,11 +97,10 @@ public class FavoriteActivity01 extends AppCompatActivity {
             System.out.println("favorite-responseData:" + responseData);
             if (TextUtils.isEmpty(responseData)) {
                 new AlertDialog.Builder(this)
-                        .setTitle("登录凭证失效")
-                        .setMessage("登录凭证失效，请重新登录")
+                        .setTitle("登录凭证过期")
+                        .setMessage("登录凭证过期，请重新登录")
                         .setPositiveButton("确定", (dialog, which) -> {
-                            Intent intent = new Intent(this, LoginActivity01.class);
-                            startActivity(intent);
+                            LoginUtil.toLoginActivity(this);
                         })
                         .show();
                 return false;
@@ -129,9 +131,11 @@ public class FavoriteActivity01 extends AppCompatActivity {
                     for (int i = 0; i < data.length(); ++i) {
                         JSONObject item = data.getJSONObject(i);
                         FavoriteBook book = new FavoriteBook();
-                        String bookId = item.getString("bookId");
-                        book.setBookId(bookId);
-                        book.setTitle("bookId: " + bookId);
+                        book.setBookId(item.getString("uid"))
+                                .setName(item.getString("name"))
+                                .setPrice(item.getDouble("price"))
+                                .setUrl(item.getString("url"))
+                                .setDetails(item.getString("details"));
                         books.add(book);
                     }
 
@@ -154,15 +158,15 @@ public class FavoriteActivity01 extends AppCompatActivity {
         static class ViewHolder extends RecyclerView.ViewHolder {
             View bookView;
             ImageView bookImage;
-            TextView bookTitle;
+            TextView bookName;
             TextView bookPrice;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 bookView = itemView;
-                /*bookImage = itemView.findViewById(R.id.book_image);
-                bookTitle = itemView.findViewById(R.id.book_title);
-                bookPrice = itemView.findViewById(R.id.book_price);*/
+                bookImage = itemView.findViewById(R.id.book_image);
+                bookName = itemView.findViewById(R.id.book_name);
+                bookPrice = itemView.findViewById(R.id.book_price);
             }
         }
 
@@ -175,11 +179,19 @@ public class FavoriteActivity01 extends AppCompatActivity {
         public BookAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorite_item, parent, false);
             ViewHolder holder = new ViewHolder(view);
-            // 点击收藏夹中的某一项，跳转到该项的详情页
+            /** 点击收藏夹中的某一项，跳转到该项的详情页
+             *  传入新页面的同名参数有 bookId, name, price, url, details
+             */
             holder.bookView.setOnClickListener(v -> {
                 int position = holder.getAdapterPosition();
                 FavoriteBook book = list.get(position);
-                Toast.makeText(v.getContext(), "bookId " + book.getBookId(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), ProductPage.class);
+                intent.putExtra("bookId", book.getBookId());
+                intent.putExtra("name", book.getName());
+                intent.putExtra("price", book.getPrice());
+                intent.putExtra("url", book.getUrl());
+                intent.putExtra("details", book.getDetails());
+                v.getContext().startActivity(intent);
             });
             return holder;
         }
@@ -187,8 +199,23 @@ public class FavoriteActivity01 extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull BookAdapter.ViewHolder holder, int position) {
             FavoriteBook book = list.get(position);
-            holder.bookTitle.setText(book.getTitle());
-            holder.bookPrice.setText(String.valueOf(book.getPrice()));
+            holder.bookName.setText(book.getName());
+            holder.bookPrice.setText("￥" + book.getPrice());
+            // 获取书的图片并显示
+            Request request = new Request.Builder()
+                    .url(book.getUrl())
+                    .build();
+            OkHttpClient client = new OkHttpClient();
+            NetworkUtils.forceNetworkRequesting();
+            try (Response response = client.newCall(request).execute()) {
+                InputStream inputStream = response.body().byteStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                holder.bookImage.setImageBitmap(bitmap);
+                System.out.println("收藏夹显示书图成功:" + bitmap + book.getUrl());
+            } catch (IOException e) {
+                System.out.println("收藏夹显示书图失败：");
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -199,40 +226,57 @@ public class FavoriteActivity01 extends AppCompatActivity {
 
     class FavoriteBook {
         private String bookId;
-        private String title;
+        private String name;
         private double price;
+        private String url;
+        private String details;
 
         public FavoriteBook() {
-        }
-
-        public FavoriteBook(String bookId, String title, double price) {
-            this.bookId = bookId;
-            this.title = title;
-            this.price = price;
         }
 
         public String getBookId() {
             return bookId;
         }
 
-        public void setBookId(String bookId) {
+        public FavoriteBook setBookId(String bookId) {
             this.bookId = bookId;
+            return this;
         }
 
-        public String getTitle() {
-            return title;
+        public String getName() {
+            return name;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public FavoriteBook setName(String name) {
+            this.name = name;
+            return this;
         }
 
         public double getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public FavoriteBook setPrice(double price) {
             this.price = price;
+            return this;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public FavoriteBook setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public String getDetails() {
+            return details;
+        }
+
+        public FavoriteBook setDetails(String details) {
+            this.details = details;
+            return this;
         }
     }
 }
