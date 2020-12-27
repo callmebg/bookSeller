@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -30,30 +31,29 @@ public class UserFragment01 extends Fragment {
     private ImageView headImageView;
     private TextView usernameView;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_user01, container, false);
+    /*@Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         // 跳转到用户信息页面
-        headImageView = v.findViewById(R.id.head);
+        headImageView = getActivity().findViewById(R.id.head);
         headImageView.setOnClickListener(view -> {
             toOtherActivity(UserInfoActivity01.class);
         });
-        usernameView = v.findViewById(R.id.username);
+        usernameView = getActivity().findViewById(R.id.username);
         usernameView.setOnClickListener(view -> {
             toOtherActivity(UserInfoActivity01.class);
         });
+        showSimpleInfo();
 
         // 由 “我的” 跳转到 “我收藏的”
-        Button collection = v.findViewById(R.id.collection);
+        Button collection = (Button) getActivity().findViewById(R.id.collection);
         collection.setOnClickListener(view -> {
             toOtherActivity(FavoriteActivity01.class);
         });
 
         // 由 “我的” 跳转到 “聊天记录”
-        Button chat = v.findViewById(R.id.chat);
+        Button chat = (Button) getActivity().findViewById(R.id.chat);
         chat.setOnClickListener(view -> {
             toOtherActivity(ChatList.class);
         });
@@ -63,13 +63,13 @@ public class UserFragment01 extends Fragment {
         release.setOnClickListener(view -> {
             toOtherActivity(MyReleaseActivity01.class);
         });
-        return v;
-    }
+    }*/
 
     @Override
-    public void onStart() {
-        super.onStart();
-        showSimpleInfo();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_user01, container, false);
     }
 
     // 已登录则显示相应头像和名字，未登录则显示默认内容
@@ -83,9 +83,6 @@ public class UserFragment01 extends Fragment {
 
             // 显示头像
             showUserImage();
-        } else {
-            usernameView.setText("名字：");
-            headImageView.setImageResource(R.drawable.head);
         }
     }
 
@@ -99,12 +96,9 @@ public class UserFragment01 extends Fragment {
         try (Response response = client.newCall(request).execute()) {
             InputStream inputStream = response.body().byteStream();
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            if (bitmap != null)
-                headImageView.setImageBitmap(bitmap);
-            else
-                headImageView.setImageResource(R.drawable.head);
+            headImageView.setImageBitmap(bitmap);
 
-            System.out.println("我的页面显示头像成功---bitmap:" + bitmap);
+            System.out.println("我的页面显示头像成功");
         } catch (IOException e) {
             Toast.makeText(getContext(), "请检查网络是否正常", Toast.LENGTH_SHORT).show();
             System.out.println("我的页面获取头像失败：");
