@@ -82,7 +82,7 @@ public class Chat extends AppCompatActivity {
         msgRecyclerView = (RecyclerView) findViewById(R.id.msg_recycler_view);
 
         chater = (TextView) findViewById(R.id.chat_name);
-        chater.setText(chaterName);
+        chater.setText(chaterName + "(点我刷新可聊天)");
 
         back = (ImageView) findViewById(R.id.chat_back);
         chater = (TextView) findViewById(R.id.chat_name);

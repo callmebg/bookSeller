@@ -21,6 +21,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHold>{
         LinearLayout rightLayout;
         TextView leftMsg, leftMsgTime;
         TextView rightMsg, rightMsgTime;
+        //获取item里面的各个控件
         public ViewHold(@NonNull View itemView) {
             super(itemView);
             leftLayout=(LinearLayout)itemView.findViewById(R.id.left_layout);
@@ -37,6 +38,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHold>{
     @NonNull
     @Override
     public MsgAdapter.ViewHold onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //获取item的布局
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.msg_item,parent,false);
         return new ViewHold(view);
     }
