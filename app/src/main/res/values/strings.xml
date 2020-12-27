@@ -16,7 +16,8 @@
     <string name="ip">47.107.117.59</string>
 
     <string name="port">80</string>
-
+    <string name="publish">我发布的</string>
+    <string name="buy">我买到的</string>
     <string name="app_name">BookSeller</string>
 
     <string name="username">username01</string>
@@ -27,6 +28,15 @@
     <string name="favActivityTitle">收藏夹</string>
 
     <string name="loginTitle">大学城二手交易平台</string>
+    <string name="title_activity_my_fragment">MyFragment</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="send_button">发送</string>
     <string name="send_hint">想跟ta说点什么呢</string>

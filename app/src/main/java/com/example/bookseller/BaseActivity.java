@@ -14,10 +14,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.bookseller.ui.home.HomeFragment;
+import com.example.bookseller.ui.home.HomeFragmentAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
 
 
 
