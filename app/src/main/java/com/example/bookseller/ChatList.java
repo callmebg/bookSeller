@@ -181,10 +181,10 @@ public class ChatList extends AppCompatActivity {
             JSONObject t = array.optJSONObject(i);
 
             if(!t.getString("recId").equals(uuid)){
-                tmap.put(t.getString("recId"), "张三");
+                tmap.put(t.getString("recId"), t.getString("recName"));
             }
             if(!t.getString("senId").equals(uuid)){
-                tmap.put(t.getString("senId"), "张三");
+                tmap.put(t.getString("senId"), t.getString("senName"));
             }
         }
         Set<String> tset = tmap.keySet();
