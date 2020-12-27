@@ -104,8 +104,10 @@ public class UserInfoActivity01 extends AppCompatActivity {
                         .setTitle("注销成功")
                         .setMessage("注销成功")
                         .setPositiveButton("确定", (dialog, which) -> {
-                            Intent intent = new Intent(this, MainActivity.class);
-                            startActivity(intent);
+//                            Intent intent = new Intent(this, BaseActivity.class);
+//                            startActivity(intent);
+                            LoginUtil.clearUserInfo(this);
+                            finish();
                         })
                         .show();
             }
@@ -148,7 +150,10 @@ public class UserInfoActivity01 extends AppCompatActivity {
         try (Response response = client.newCall(request).execute()) {
             InputStream inputStream = response.body().byteStream();
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            runOnUiThread(() -> headImgInfoView.setImageBitmap(bitmap));
+            if (bitmap != null)
+                runOnUiThread(() -> headImgInfoView.setImageBitmap(bitmap));
+            else
+                headImgInfoView.setImageResource(R.drawable.head);
             System.out.println("个人信息页面显示头像成功");
         } catch (IOException e) {
             Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();

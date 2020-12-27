@@ -1,6 +1,5 @@
 package com.example.bookseller;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -105,8 +104,9 @@ public class RegisterActivity01 extends AppCompatActivity {
                         toast.cancel();
                         Toast.makeText(RegisterActivity01.this, "注册成功", Toast.LENGTH_SHORT).show();
                     }
-                    Intent intent = new Intent(RegisterActivity01.this, LoginActivity01.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(RegisterActivity01.this, LoginActivity01.class);
+//                    startActivity(intent);
+                    finish();
                     return true;
                 }
                 case "500": {   // 注册失败

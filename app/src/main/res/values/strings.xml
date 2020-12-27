@@ -30,6 +30,8 @@
 
     <string name="send_button">发送</string>
     <string name="send_hint">想跟ta说点什么呢</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

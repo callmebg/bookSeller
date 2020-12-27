@@ -1,6 +1,5 @@
 package com.example.bookseller;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -97,8 +96,10 @@ public class ChangePasswordActivity01 extends AppCompatActivity {
             switch (status) {
                 case "200": {
                     Toast.makeText(this, "修改密码成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, UserInfoActivity01.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(this, UserInfoActivity01.class);
+//                    startActivity(intent);
+                    // 销毁当前活动
+                    finish();
                     break;
                 }
                 default: {

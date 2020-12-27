@@ -1,11 +1,5 @@
 package com.example.bookseller;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,8 +8,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.bookseller.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,13 +33,12 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base);
 
 
-
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.hide();
         }
 
-        if(Build.VERSION.SDK_INT >= 21){
+        if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
@@ -52,27 +50,27 @@ public class BaseActivity extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new PutOnFragment());
-        fragments.add(new HomeFragment());
+        fragments.add(new UserFragment01());
         //绑定Adapter
         FragmentAdapter fragmentAdapter = new FragmentAdapter(fragments, getSupportFragmentManager());
         viewPager.setAdapter(fragmentAdapter);
         //相应按钮操作切换界面
-        bottomNavigationItemView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+        bottomNavigationItemView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int menuID = menuItem.getItemId();
 
-                switch (menuID){
+                switch (menuID) {
                     case R.id.navigation_home:
                         viewPager.setCurrentItem(0);
                         break;
                     case R.id.navigation_sport:
                         SharedPreferences editor = getSharedPreferences("data", MODE_PRIVATE);
                         boolean is_login = editor.getBoolean("is_login", false);//登陆是true
-                        if(is_login){
+                        if (is_login) {
                             viewPager.setCurrentItem(1);
 
-                        }else{
+                        } else {
                             Toast.makeText(getApplicationContext(), "亲，请先登录哦", Toast.LENGTH_SHORT).show();
                             Log.i("123", String.valueOf(is_login));
                             Intent intent = new Intent(BaseActivity.this, LoginActivity01.class);
@@ -80,9 +78,10 @@ public class BaseActivity extends AppCompatActivity {
                         }
                         break;
                     case R.id.navigation_user:
-                        //viewPager.setCurrentItem(2);
-                        Intent intent = new Intent(BaseActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        viewPager.setCurrentItem(2);
+
+//                        Intent intent = new Intent(BaseActivity.this, MainActivity.class);
+//                        startActivity(intent);
                         break;
                 }
                 return false;
@@ -91,17 +90,17 @@ public class BaseActivity extends AppCompatActivity {
         //设置页面切换监听器
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels){
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onPageSelected(int position){
+            public void onPageSelected(int position) {
                 bottomNavigationItemView.getMenu().getItem(position).setChecked(true);
             }
 
             @Override
-            public void onPageScrollStateChanged(int state){
+            public void onPageScrollStateChanged(int state) {
 
             }
         });

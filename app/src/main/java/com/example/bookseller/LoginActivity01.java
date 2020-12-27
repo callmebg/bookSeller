@@ -122,8 +122,10 @@ public class LoginActivity01 extends AppCompatActivity {
                         toast.cancel();
                         Toast.makeText(LoginActivity01.this, "登录成功", Toast.LENGTH_SHORT).show();
                     }
-                    Intent intent = new Intent(LoginActivity01.this, MainActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(LoginActivity01.this, BaseActivity.class);
+//                    startActivity(intent);
+                    // 销毁当前活动
+                    finish();
                     break;
                 }
                 case "500": {    // 用户名或密码不正确
@@ -210,7 +212,7 @@ class LoginUtil {
      *
      * @param context 需要判断是否登录的活动或需要跳转到登录页面的活动
      */
-    private static void clearUserInfo(Context context) {
+    public static void clearUserInfo(Context context) {
         SharedPreferences.Editor editor = context.getSharedPreferences("data", MODE_PRIVATE).edit();
         editor.clear();
         editor.apply();
