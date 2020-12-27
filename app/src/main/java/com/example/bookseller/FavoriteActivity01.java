@@ -45,8 +45,6 @@ public class FavoriteActivity01 extends AppCompatActivity {
         if (fetchCollections()) {
             showCollections();
         }
-
-//        test01();
     }
 
     /**
