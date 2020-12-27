@@ -57,6 +57,12 @@ public class UserFragment01 extends Fragment {
         chat.setOnClickListener(view -> {
             toOtherActivity(ChatList.class);
         });
+
+        // 由 “我的” 跳转到 “我发布的”
+        Button release = v.findViewById(R.id.release);
+        release.setOnClickListener(view -> {
+            toOtherActivity(MyReleaseActivity01.class);
+        });
         return v;
     }
 

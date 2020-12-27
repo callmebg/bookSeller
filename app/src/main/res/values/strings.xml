@@ -22,7 +22,7 @@
     <string name="username">username01</string>
     <string name="favorite">我收藏的</string>
     <string name="chat">聊天记录</string>
-    <string name="logout">退出登录</string>
+    <string name="release">我发布的</string>
 
     <string name="favActivityTitle">收藏夹</string>
 
