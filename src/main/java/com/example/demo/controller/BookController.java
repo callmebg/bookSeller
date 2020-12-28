@@ -38,7 +38,7 @@ public class BookController {
         release.setDate(releaseBookDto.getDate());
         release.setBookId(book.getUid());
         bookService.insertRelease(release);
-        return ResponseGenerator.getSuccessResponse();
+        return ResponseGenerator.getSuccessResponse(book.getUid());
     }
 
     @PostMapping("/getNewRelease")
@@ -54,10 +54,16 @@ public class BookController {
         return ResponseGenerator.getSuccessResponse(bookService.getMyRelease(userId));
     }
 
-    @PostMapping("cancelRelease")
+    @PostMapping("/cancelRelease")
     public SuccessResponse cancelRelease(@RequestParam("bookId") String bookId,HttpServletRequest request) throws CustomException {
         String userId= JwtUtil.getUid(request.getHeader("Authorization").substring("Bearer ".length()));
         bookService.cancelRelease(userId,bookId);
         return ResponseGenerator.getSuccessResponse();
+    }
+
+    @PostMapping("/searchBookByName")
+    public  SuccessResponse getBookByName(@RequestParam("bookName") String bookName)
+    {
+        return ResponseGenerator.getSuccessResponse(bookService.getBookByName(bookName));
     }
 }

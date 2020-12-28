@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.Util.ImgUploadUtil;
+import com.example.demo.Util.JwtUtil;
 import com.example.demo.dao.BookMapper;
+import com.example.demo.dao.UserMapper;
 import com.example.demo.dto.Book;
 import com.example.demo.exception.CustomException;
 import com.example.demo.exception.ExceptionEnum;
@@ -22,9 +24,11 @@ public class ImgUploadServiceImpl  implements ImgUploadService {
     private Logger log= LoggerFactory.getLogger(getClass());
     @Autowired
     BookMapper bookMapper;
+    @Autowired
+    UserMapper userMapper;
 
     @Override
-    public void uploadBookImg(HttpServletRequest request) throws IOException {
+    public String uploadBookImg(HttpServletRequest request) throws IOException {
         MultipartRequest  multipartRequest=(MultipartRequest)request;
         List<MultipartFile> list=multipartRequest.getFiles("img");
         MultipartFile multipartFile=list.get(0);
@@ -33,8 +37,7 @@ public class ImgUploadServiceImpl  implements ImgUploadService {
         BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(new FileOutputStream(new File(filePath)));
         bufferedOutputStream.write(bytes);
         bufferedOutputStream.close();
-        String bookId=request.getParameter("bookId");
-        bookMapper.updateUrlById(bookId,ImgUploadUtil.booKUrl+multipartFile.getOriginalFilename());
+        return ImgUploadUtil.booKUrl+multipartFile.getOriginalFilename();
     }
 
     @Override
@@ -44,5 +47,20 @@ public class ImgUploadServiceImpl  implements ImgUploadService {
         File file=new File(url);
         if(!file.exists()) throw new CustomException(ExceptionEnum.VALID_IMG,"downloadBookImg");
         return file;
+    }
+
+    @Override
+    public String uploadUserImg(HttpServletRequest request) throws IOException {
+        MultipartRequest multipartRequest=(MultipartRequest)request;
+        List<MultipartFile> list=multipartRequest.getFiles("img");
+        MultipartFile file=list.get(0);
+        String filePath=ImgUploadUtil.filePath +file.getOriginalFilename();
+        byte [] bytes=file.getBytes();
+        BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(new FileOutputStream(new File(filePath)));
+        bufferedOutputStream.write(bytes);
+        bufferedOutputStream.close();
+        String uid= JwtUtil.getUid(request.getHeader("Authorization").substring("Bearer ".length()));
+        userMapper.updateUserImg(uid,ImgUploadUtil.booKUrl+file.getOriginalFilename());
+        return ImgUploadUtil.booKUrl+file.getOriginalFilename();
     }
 }

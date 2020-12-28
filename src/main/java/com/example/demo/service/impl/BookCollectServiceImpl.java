@@ -4,6 +4,7 @@ import com.example.demo.dao.BookCollectMapper;
 import com.example.demo.dao.BookMapper;
 import com.example.demo.dto.Book;
 import com.example.demo.dto.BookCollect;
+import com.example.demo.dto.BookDo;
 import com.example.demo.exception.CustomException;
 import com.example.demo.exception.ExceptionEnum;
 import com.example.demo.service.BookCollectService;
@@ -35,7 +36,7 @@ public class BookCollectServiceImpl implements BookCollectService {
     }
 
     @Override
-    public List<Book> selectAllCollectBook(String userId) {
+    public List<BookDo> selectAllCollectBook(String userId) {
         return bookCollectMapper.selectAllCollect(userId);
     }
 }

@@ -8,7 +8,9 @@ import java.io.IOException;
 
 public interface ImgUploadService {
 
-    void uploadBookImg(HttpServletRequest request) throws IOException;
+    String uploadBookImg(HttpServletRequest request) throws IOException;
 
     File downloadBookImg(String bookId) throws CustomException;
+
+    String uploadUserImg(HttpServletRequest request) throws IOException;
 }

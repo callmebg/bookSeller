@@ -40,4 +40,12 @@ public interface UserMapper extends BaseMapper<user> {
     @Select("SELECT email FROM user WHERE email=#{email}")
     List<String> getAllEmail(@Param("email") String email);
 
+    default user getUserById(String uid)
+    {
+        return selectOne(new QueryWrapper<user>().eq("id",uid));
+    }
+
+    @Update("UPDATE user SET url=#{url} WHERE id=#{userId}")
+    void updateUserImg(@Param("userId") String userId,@Param("url") String url);
+
 }

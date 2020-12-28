@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -76,7 +77,7 @@ public class LoginController {
         return ResponseGenerator.getSuccessResponse(token);
     }
 
-//    @PreAuthorize("@ss.hasPermission('admin')")
+    @PreAuthorize("@ss.hasPermission('admin')")
     @ApiOperation("test")
     @GetMapping("/test")
     public SuccessResponse test(HttpServletRequest request)
@@ -119,5 +120,15 @@ public class LoginController {
         userService.changePermissions(permissions,uid);
         return ResponseGenerator.getSuccessResponse();
     }
+
+    @GetMapping("/getUserDetails")
+    public SuccessResponse getUserDetails(HttpServletRequest request)
+    {
+        String uid=JwtUtil.getUid(request.getHeader("Authorization").substring("Bearer ".length()));
+        user u=userService.getUserById(uid);
+        return ResponseGenerator.getSuccessResponse(u);
+    }
+
+
 
 }

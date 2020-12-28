@@ -19,4 +19,6 @@ public interface BookService {
     List<ReleaseBookDo> getMyRelease(String userId);
 
     void cancelRelease(String userId,String bookId) throws CustomException;
+
+    List<Book> getBookByName(String bookName);
 }

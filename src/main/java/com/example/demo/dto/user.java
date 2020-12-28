@@ -23,6 +23,8 @@ public class user {
 
     private String email;
 
+    private String url;
+
     public String getId() {
         return id;
     }
@@ -61,5 +63,13 @@ public class user {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

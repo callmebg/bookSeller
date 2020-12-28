@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.ToString;
 
 @ToString
@@ -8,6 +9,7 @@ public class NewReleaseDto {
 
     private String username;
 
+    @JsonProperty("book_id")
     private String uid;
 
     private String name;

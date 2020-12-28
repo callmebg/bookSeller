@@ -33,4 +33,9 @@ public interface BookMapper extends BaseMapper<Book> {
     @Update("UPDATE book SET url=#{url} WHERE uid=#{bookId}")
     void updateUrlById(@Param("bookId") String bookId,@Param("url")String url);
 
+    default List<Book> selectBookByName(String bookName)
+    {
+        return selectList(new QueryWrapper<Book>().eq("name",bookName));
+    }
+
 }

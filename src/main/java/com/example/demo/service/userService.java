@@ -19,4 +19,6 @@ public interface userService {
 
     List<String> getAllEmail(String email);
 
+    user getUserById(String id);
+
 }
