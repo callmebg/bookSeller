@@ -66,12 +66,23 @@
         android:id="@+id/shopping_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="240dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="30dp"
         android:background="#FF5722"
-        android:text="加入购物车"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shopping_image" />
+        android:text="收藏本书"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/chat_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="30dp"
+        android:background="#FF5722"
+        android:text="联系卖家"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/shopping_money"
