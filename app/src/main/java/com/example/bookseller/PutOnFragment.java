@@ -167,8 +167,8 @@ public class PutOnFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                Intent intent = new Intent();
-//                intent.setAction(Intent.ACTION_PICK);
-//                intent.setType("image/*");
+//               intent.setAction(Intent.ACTION_PICK);
+//               intent.setType("image/*");
 //                startActivityForResult(intent, CHOOSE_PHOTO);
                 showSelectingSourceDialog();
             }
