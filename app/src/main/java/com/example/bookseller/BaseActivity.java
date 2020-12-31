@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.bookseller.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class BaseActivity extends AppCompatActivity {
         //设置缓存Pages个数
         viewPager.setOffscreenPageLimit(6);
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new HomeFragment());
+        fragments.add(new HomeFragment01());
         fragments.add(new PutOnFragment());
         fragments.add(new UserFragment01());
         //绑定Adapter

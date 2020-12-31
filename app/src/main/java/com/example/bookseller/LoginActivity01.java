@@ -63,7 +63,7 @@ public class LoginActivity01 extends AppCompatActivity {
     }
 
     /**
-     * 当用户填写的邮箱和密码不为空时，提交到服务器登录，
+     * 当用户填写的名字和密码不为空时，提交到服务器登录，
      * 否则提示用户输入邮箱或密码
      *
      * @param username 用户名字
@@ -122,8 +122,8 @@ public class LoginActivity01 extends AppCompatActivity {
                         toast.cancel();
                         Toast.makeText(LoginActivity01.this, "登录成功", Toast.LENGTH_SHORT).show();
                     }
-//                    Intent intent = new Intent(LoginActivity01.this, BaseActivity.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(this, BaseActivity.class);
+                    startActivity(intent);
                     // 销毁当前活动
                     finish();
                     break;

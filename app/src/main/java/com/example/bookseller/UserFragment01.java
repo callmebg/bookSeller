@@ -116,7 +116,7 @@ public class UserFragment01 extends Fragment {
     private void toOtherActivity(Class<?> cls) {
         if (LoginUtil.isLogin(getContext())) {
             Intent intent = new Intent(getContext(), cls);
-            startActivityForResult(intent, 1);
+            startActivity(intent);
         } else {
             LoginUtil.toLoginActivity(getContext());
         }

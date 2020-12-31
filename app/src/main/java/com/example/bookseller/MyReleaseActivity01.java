@@ -42,13 +42,13 @@ public class MyReleaseActivity01 extends AppCompatActivity {
         setContentView(R.layout.activity_my_release01);
         setTitle("我发布的");
 
-        if (fetchCollections()) {
-            showCollections();
+        if (fetchReleases()) {
+            showReleases();
         }
     }
 
     /**
-     * 测试收藏夹的显示：非正式数据
+     * 测试显示：非正式数据
      */
     private void test01() {
         List<ReleaseBook> list = new ArrayList<>();
@@ -65,9 +65,9 @@ public class MyReleaseActivity01 extends AppCompatActivity {
     }
 
     /**
-     * 显示收藏夹内容
+     * 显示我发布的内容
      */
-    private void showCollections() {
+    private void showReleases() {
         RecyclerView favoriteBooksView = findViewById(R.id.my_release_books_view);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         favoriteBooksView.setLayoutManager(manager);
@@ -76,10 +76,10 @@ public class MyReleaseActivity01 extends AppCompatActivity {
     }
 
     /**
-     * 从服务器获取登录用户的收藏夹。
+     * 从服务器获取登录用户的发布信息。
      * 成功获取和处理返回 true；否则返回 false
      */
-    private boolean fetchCollections() {
+    private boolean fetchReleases() {
         SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         String token = "Bearer " + sp.getString("token", "");
 
@@ -113,7 +113,7 @@ public class MyReleaseActivity01 extends AppCompatActivity {
     }
 
     /**
-     * 处理服务器返回信息，提取出收藏夹内容
+     * 处理服务器返回信息，提取出我发布的内容
      * 未完成...
      *
      * @param responseData 响应体
@@ -144,7 +144,7 @@ public class MyReleaseActivity01 extends AppCompatActivity {
             }
         } catch (JSONException e) {
             Toast.makeText(this, "请检查网络是否正常", Toast.LENGTH_SHORT).show();
-            System.out.println("查看收藏夹返回信息处理异常：");
+            System.out.println("查看我发布的返回信息处理异常：");
             e.printStackTrace();
         }
         return false;
@@ -211,9 +211,9 @@ public class MyReleaseActivity01 extends AppCompatActivity {
                 InputStream inputStream = response.body().byteStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 holder.bookImage.setImageBitmap(bitmap);
-                System.out.println("收藏夹显示书图成功:" + bitmap + book.getUrl());
+                System.out.println("我发布的显示书图成功:" + bitmap + book.getUrl());
             } catch (IOException e) {
-                System.out.println("收藏夹显示书图失败：");
+                System.out.println("我发布的显示书图失败：");
                 e.printStackTrace();
             }
         }
