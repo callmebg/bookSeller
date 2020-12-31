@@ -159,6 +159,10 @@ public class HomeFragment01 extends Fragment {
                 case "200": {
                     JSONArray data = jsonObject.getJSONArray("data");
                     books = new ArrayList<>();
+                    //如果没有搜到
+                    if(data.length() == 0){
+                        Toast.makeText(getActivity(), "抱歉，查无此物！", Toast.LENGTH_LONG).show();
+                    }
                     for (int i = 0; i < data.length(); ++i) {
                         JSONObject item = data.getJSONObject(i);
                         HomeReleaseBook book = new HomeReleaseBook();
