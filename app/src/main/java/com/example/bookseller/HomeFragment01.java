@@ -235,14 +235,17 @@ public class HomeFragment01 extends Fragment {
             holder.bookPrice.setText("￥" + book.getPrice());
             // 获取书的图片并显示
             Request request = new Request.Builder()
-                    .url(book.getUrl())
+                    .url(book.getUrl().equals("null") ? "http://null" : book.getUrl())
                     .build();
             OkHttpClient client = new OkHttpClient();
             NetworkUtils.forceNetworkRequesting();
             try (Response response = client.newCall(request).execute()) {
                 InputStream inputStream = response.body().byteStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                holder.bookImage.setImageBitmap(bitmap);
+                if (bitmap != null)
+                    holder.bookImage.setImageBitmap(bitmap);
+                else
+                    holder.bookImage.setImageResource(R.drawable.book_pause);
                 System.out.println("首页显示书图成功:" + bitmap + book.getUrl());
             } catch (IOException e) {
                 System.out.println("首页显示书图失败：");
